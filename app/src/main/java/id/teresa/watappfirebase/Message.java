@@ -24,6 +24,12 @@ public class Message {
         this.sender = sender;
     }
 
+    public Message(String text, String time, String sender) {
+        this.text = text;
+        this.time = time;
+        this.sender = sender;
+    }
+
     public Message() {
     }
 
@@ -75,6 +81,10 @@ public class Message {
         } else {
             return 1;
         }
+    }
+
+    public boolean isFromMe() {
+        return sender.equalsIgnoreCase(Constants.MY_NAME);
     }
 
     public String getText() {
