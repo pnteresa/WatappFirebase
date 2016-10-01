@@ -17,12 +17,14 @@
         android:paddingTop="8dp">
 
         <TextView
+            android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="My text"
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="10:00" />
