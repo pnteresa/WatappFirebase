@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.Query;
+
 import java.util.List;
 
 /**
@@ -19,7 +21,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public Context mContext;
     private List<Message> mList;
 
+
     public MessageAdapter(Context mContext, List<Message> myDataset) {
+        this.mContext = mContext;
+        mList = myDataset;
+    }
+
+    public MessageAdapter(Query query, List<Message> myDataset) {
         this.mContext = mContext;
         mList = myDataset;
     }
@@ -34,7 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public MessageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                         int viewType) {
         View v;
-        if (viewType == Message.Sender.ME.ordinal()) {
+        if (viewType == 0) { //0: me
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_me, parent, false);
         } else {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_you, parent, false);
@@ -46,7 +54,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
         Message message = mList.get(position);
-        return message.getSender().ordinal();
+        return message.getSenderOrdinal();
     }
 
     @Override
@@ -54,7 +62,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Message m = mList.get(position);
         if (holder.mText != null && holder.mTime != null) {
             holder.mText.setText(m.getText());
-            holder.mTime.setText(m.getFormattedTime());
+            holder.mTime.setText(m.getTime());
         }
     }
 

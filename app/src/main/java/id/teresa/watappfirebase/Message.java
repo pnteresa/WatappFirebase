@@ -1,36 +1,43 @@
 package id.teresa.watappfirebase;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by teresa on 9/30/2016.
  */
-
+@IgnoreExtraProperties
 public class Message {
-    private String text;
-    private Date time;
-    private Sender sender;
+    public String text;
+    public String time;
+    public String sender;
 
-    public Message(String text, Date time, Sender sender) {
+    public Message(String text, Date time, String sender) {
         this.text = text;
-        this.time = time;
+        this.time = getFormattedTime(time);
         this.sender = sender;
     }
 
-
-    public Message(String text, Sender sender) {
-        this.text = text;
-        this.sender = sender;
-        this.time = new Date();
+    public Message() {
     }
 
-    private static String getSdf(Date date) {
+    public Message(String text, String sender) {
+        this.text = text;
+        this.sender = sender;
+        this.time = getFormattedTime(new Date());
+    }
+
+    public static String getSdf(Date date) {
         return getSdf(date, Calendar.getInstance().getTime());
     }
 
-    private static String getSdf(Calendar cal1, Calendar cal2) {
+    public static String getSdf(Calendar cal1, Calendar cal2) {
         StringBuilder sb = new StringBuilder();
         if (cal1.get(Calendar.YEAR) != cal2.get(Calendar.YEAR)) {
             sb.append("dd MMM yy hh:mm aaa");
@@ -44,12 +51,30 @@ public class Message {
         return sb.toString();
     }
 
-    private static String getSdf(Date date1, Date date2) {
+    public static String getSdf(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(date1);
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
         return getSdf(cal1, cal2);
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("text", text);
+        result.put("time", time);
+        result.put("sender", sender);
+
+        return result;
+    }
+
+    public int getSenderOrdinal() {
+        if (sender.equalsIgnoreCase(Constants.MY_NAME)) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     public String getText() {
@@ -60,29 +85,24 @@ public class Message {
         this.text = text;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
-    public String getFormattedTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat(getSdf(time));
-        return sdf.format(time);
+    public String getFormattedTime(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(getSdf(date));
+        return sdf.format(date);
     }
 
-    public Sender getSender() {
+    public String getSender() {
         return sender;
     }
 
-    public void setSender(Sender sender) {
+    public void setSender(String sender) {
         this.sender = sender;
-    }
-
-    public enum Sender {
-        ME,
-        OTHER
     }
 }
